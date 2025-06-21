@@ -1,0 +1,37 @@
+<!DOCTYPE html> 
+<html>
+<head>
+    <title>Record Customer Payment</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body class="container mt-5">
+    <h2>Record Customer Payment</h2>
+
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <div class="alert alert-success">{{ messages[0] }}</div>
+      {% endif %}
+    {% endwith %}
+
+    <form method="POST" enctype="multipart/form-data" class="mt-4">
+        <div class="mb-3">
+            <label>Customer Name:</label>
+            <input type="text" class="form-control" name="customer_name" required>
+        </div>
+        <div class="mb-3">
+            <label>Amount Paid (Tk.):</label>
+            <input type="number" step="0.01" class="form-control" name="amount" required>
+        </div>
+        <div class="mb-3">
+            <label>Purpose (What work):</label>
+            <textarea class="form-control" name="purpose" required></textarea>
+        </div>
+        <div class="mb-3">
+            <label>Upload Proof (Image):</label>
+            <input type="file" class="form-control" name="proof" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit Payment</button>
+        <a href="/submit" class="btn btn-secondary">← Back</a>
+    </form>
+</body>
+</html>
