@@ -201,6 +201,35 @@ def records():
         search=search or ""
     )
 
+@app.route('/edit-expense/<int:expense_id>', methods=['GET', 'POST'])
+def edit_expense(expense_id):
+    if not session.get('user_id'):
+        return redirect('/login')
+
+    expense = Expense.query.get_or_404(expense_id)
+    
+    # Prevent others from editing someone else's record
+    if expense.user_id != session['user_id']:
+        return "Unauthorized", 403
+
+    if request.method == 'POST':
+        expense.description = request.form['description']
+        expense.amount = float(request.form['amount'])
+        expense.category = request.form['category']
+
+        file = request.files.get('bill')
+        if file and file.filename != "":
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            expense.bill_filename = filename
+
+        db.session.commit()
+        flash("Expense updated successfully.")
+        return redirect('/records')
+
+    return render_template('edit_expense.html', expense=expense)
+
+
 @app.route('/admin')
 def admin():
     if not session.get('admin'):

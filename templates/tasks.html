@@ -22,7 +22,6 @@
             border-radius: 0.35rem;
             box-shadow: 0 2px 5px rgb(0 0 0 / 0.1);
         }
-        /* Filter form styles */
         form.row.g-3.mb-4 {
             max-width: 960px;
             margin: 0 auto 30px auto;
@@ -48,7 +47,6 @@
             background-color: #1e40af;
             border-color: #1e40af;
         }
-        /* Table styling */
         table {
             max-width: 960px;
             margin: 0 auto;
@@ -66,7 +64,6 @@
         td, th {
             vertical-align: middle !important;
         }
-        /* Buttons */
         button.btn-sm.btn-danger {
             border-radius: 0.4rem;
             padding: 5px 10px;
@@ -76,17 +73,14 @@
         button.btn-sm.btn-danger:hover {
             background-color: #991b1b;
         }
-        /* Bulk delete button */
         div.d-flex.justify-content-between.mb-2 {
             max-width: 960px;
             margin: 0 auto 10px auto;
         }
-        /* Pagination */
         nav ul.pagination {
             max-width: 960px;
             margin: 25px auto 0 auto;
         }
-        /* Back button */
         a.btn-secondary.mt-4 {
             display: block;
             max-width: 960px;
@@ -101,7 +95,6 @@
 <body>
     <h2>📌 All Assigned Tasks</h2>
 
-    <!-- 🔍 Filter Form -->
     <form method="get" class="row g-3 mb-4">
         <div class="col-md-4">
             <input type="text" name="search" class="form-control" placeholder="Search description" value="{{ search }}">
@@ -117,7 +110,6 @@
         </div>
     </form>
 
-    <!-- ✅ Bulk Delete Form -->
     <form method="POST" action="/bulk-delete-tasks">
         {% if session.admin %}
         <div class="d-flex justify-content-between mb-2">
@@ -146,13 +138,18 @@
                     <td>{{ task.description }}</td>
                     <td>
                         {% if task.media_filename %}
-                            {% if task.media_filename.endswith('.mp3') or task.media_filename.endswith('.wav') %}
+                            {% set ext = task.media_filename.split('.')[-1].lower() %}
+                            {% if ext in ['jpg', 'jpeg', 'png', 'gif'] %}
+                                <a href="{{ url_for('static', filename='uploads/' ~ task.media_filename) }}" target="_blank">
+                                    <img src="{{ url_for('static', filename='uploads/' ~ task.media_filename) }}" alt="Image">
+                                </a>
+                            {% elif ext in ['mp3', 'wav', 'ogg'] %}
                                 <audio controls>
                                     <source src="{{ url_for('static', filename='uploads/' ~ task.media_filename) }}">
                                 </audio>
                             {% else %}
                                 <a href="{{ url_for('static', filename='uploads/' ~ task.media_filename) }}" target="_blank">
-                                    <img src="{{ url_for('static', filename='uploads/' ~ task.media_filename) }}" alt="Task File">
+                                    📄 View File
                                 </a>
                             {% endif %}
                         {% else %}
@@ -177,7 +174,6 @@
         </table>
     </form>
 
-    <!-- 🔁 Pagination -->
     <nav>
         <ul class="pagination justify-content-center">
             {% if pagination.has_prev %}
@@ -206,7 +202,8 @@
         </ul>
     </nav>
 
-    <a href="/submit" class="btn btn-secondary mt-4">← Back </a>
+    <a href="/submit" class="btn btn-secondary mt-4">← Back (for User) </a>
+    <a href="/admin" class="btn btn-secondary mt-4">← Back ( for Admin)</a>
 
     <script>
         function toggleAll(source) {

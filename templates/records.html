@@ -149,6 +149,7 @@
                     <th>Category</th>
                     <th>Time (BD)</th>
                     <th>Bill Image</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -168,6 +169,9 @@
                         {% else %}
                         —
                         {% endif %}
+                    </td>
+                    <td>
+                        <a class="btn btn-sm btn-warning" href="{{ url_for('edit_expense', expense_id=expense.id) }}">✏️ Edit</a>
                     </td>
                 </tr>
                 {% endfor %}
